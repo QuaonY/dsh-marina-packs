@@ -1,0 +1,31 @@
+# Node modules
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+*.tmp
+*.temp
+
+# Build output
+dist/
+build/
+
+# Package files (整合包应该提交，不要忽略)
+# 但要忽略开发过程中的临时打包文件
+*.zip.tmp
+*.tar.gz.tmp

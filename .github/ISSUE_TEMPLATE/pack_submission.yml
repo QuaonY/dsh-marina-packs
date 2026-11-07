@@ -1,0 +1,113 @@
+---
+name: 🎁 提交整合包
+description: 分享你的 DSH Marina 整合包
+title: "[Pack] "
+labels: ["pack-submission"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你愿意分享整合包！请填写以下信息。
+        
+        **提示：** 如果你的整合包已经准备好了，建议直接提交 Pull Request 而不是 Issue。
+
+  - type: input
+    id: pack-name
+    attributes:
+      label: 整合包名称
+      description: 整合包的显示名称
+      placeholder: "例如：AI 开发全家桶"
+    validations:
+      required: true
+
+  - type: input
+    id: pack-dir
+    attributes:
+      label: 目录名
+      description: 整合包在 packs/ 下的目录名（小写，短横线分隔）
+      placeholder: "例如：ai-development"
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 描述
+      description: 简要描述你的整合包是做什么的，适合谁使用
+      placeholder: |
+        这是一个面向开发者的整合包，包含...
+        适合需要...的用户
+    validations:
+      required: true
+
+  - type: textarea
+    id: plugins
+    attributes:
+      label: 包含的插件
+      description: 列出这个整合包包含的主要插件
+      placeholder: |
+        - code-runner
+        - terminal-tools
+        - git-helper
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tags
+    attributes:
+      label: 标签
+      description: 选择合适的标签（可多选）
+      multiple: true
+      options:
+        - development
+        - writing
+        - research
+        - productivity
+        - entertainment
+        - education
+        - ai
+        - code
+        - data
+        - web
+        - beginner
+        - intermediate
+        - advanced
+        - minimal
+        - lightweight
+    validations:
+      required: true
+
+  - type: input
+    id: runtime-version
+    attributes:
+      label: 最低运行时版本
+      description: 这个整合包需要的最低 DSH 运行时版本
+      placeholder: "例如：2.0.0"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: 检查清单
+      description: 请确认以下事项
+      options:
+        - label: 已测试整合包可以正常使用
+          required: true
+        - label: 不包含敏感数据（API Keys、Token、个人信息等）
+          required: true
+        - label: 已准备好 pack.json 和 README.md
+          required: true
+        - label: 同意使用 MIT License
+          required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: 其他说明
+      description: 还有什么想补充的吗？
+      placeholder: |
+        可选：
+        - 预览图链接
+        - 特别说明
+        - 已知问题

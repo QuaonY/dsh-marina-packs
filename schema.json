@@ -1,0 +1,203 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/你的用户名/dsh-marina-packs/schema.json",
+  "title": "DSH Marina Pack",
+  "description": "Schema for DSH Marina integration pack configuration",
+  "type": "object",
+  "required": ["schema_version", "name", "version", "author", "description", "plugins"],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "description": "Schema version for future compatibility",
+      "const": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "Display name of the pack",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "version": {
+      "type": "string",
+      "description": "Semantic version of the pack (e.g., 1.0.0)",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "author": {
+      "type": "string",
+      "description": "GitHub username or name of the pack author",
+      "minLength": 1,
+      "maxLength": 100
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the pack",
+      "minLength": 10,
+      "maxLength": 500
+    },
+    "tags": {
+      "type": "array",
+      "description": "Tags for categorization and search",
+      "items": {
+        "type": "string",
+        "enum": [
+          "development",
+          "writing",
+          "research",
+          "productivity",
+          "entertainment",
+          "education",
+          "ai",
+          "code",
+          "data",
+          "web",
+          "python",
+          "javascript",
+          "beginner",
+          "intermediate",
+          "advanced",
+          "minimal",
+          "full-featured",
+          "lightweight",
+          "theme"
+        ]
+      },
+      "minItems": 1,
+      "maxItems": 10,
+      "uniqueItems": true
+    },
+    "requirements": {
+      "type": "object",
+      "description": "Runtime version requirements",
+      "properties": {
+        "min_runtime": {
+          "type": "string",
+          "description": "Minimum required DSH runtime version",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "recommended_runtime": {
+          "type": "string",
+          "description": "Recommended DSH runtime version for optimal experience",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "max_runtime": {
+          "type": "string",
+          "description": "Maximum supported DSH runtime version (optional)",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        }
+      },
+      "required": ["min_runtime"]
+    },
+    "plugins": {
+      "type": "array",
+      "description": "List of plugins in this pack",
+      "items": {
+        "type": "object",
+        "required": ["name", "version", "enabled"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Plugin package name",
+            "minLength": 1
+          },
+          "version": {
+            "type": "string",
+            "description": "Plugin version or version range (npm semver syntax)",
+            "minLength": 1
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Whether the plugin is enabled by default"
+          },
+          "config": {
+            "type": "object",
+            "description": "Non-sensitive plugin configuration (optional)",
+            "additionalProperties": true
+          },
+          "optional": {
+            "type": "boolean",
+            "description": "Whether this plugin is optional for the pack",
+            "default": false
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Additional metadata about the pack",
+      "properties": {
+        "homepage": {
+          "type": "string",
+          "description": "Homepage URL",
+          "format": "uri"
+        },
+        "repository": {
+          "type": "string",
+          "description": "Repository URL",
+          "format": "uri"
+        },
+        "license": {
+          "type": "string",
+          "description": "SPDX license identifier",
+          "default": "MIT"
+        },
+        "created_at": {
+          "type": "string",
+          "description": "Creation date (ISO 8601)",
+          "format": "date"
+        },
+        "updated_at": {
+          "type": "string",
+          "description": "Last update date (ISO 8601)",
+          "format": "date"
+        }
+      }
+    },
+    "media": {
+      "type": "object",
+      "description": "Media assets for the pack",
+      "properties": {
+        "icon": {
+          "type": "string",
+          "description": "Path to icon file (relative to pack directory)"
+        },
+        "preview": {
+          "type": "string",
+          "description": "Path to preview image (relative to pack directory)"
+        },
+        "screenshots": {
+          "type": "array",
+          "description": "Paths to screenshot files",
+          "items": {
+            "type": "string"
+          }
+        },
+        "video": {
+          "type": "string",
+          "description": "Video URL (YouTube, Bilibili, etc.)",
+          "format": "uri"
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "description": "Compatibility information",
+      "properties": {
+        "conflicts": {
+          "type": "array",
+          "description": "List of conflicting plugins or packs",
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "description": "List of required packs that must be installed first",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
