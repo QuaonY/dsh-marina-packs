@@ -310,8 +310,8 @@ A: 在 pack.json 中使用版本范围（如 `^1.0.0`），Marina 会自动解�
 
 ## 💬 需要帮助？
 
-- 提交 [Issue](https://github.com/你的用户名/dsh-marina-packs/issues)
-- 参与 [Discussions](https://github.com/你的用户名/dsh-marina-packs/discussions)
+- 提交 [Issue](https://github.com/QuaonY/dsh-marina-packs/issues)
+- 参与 [Discussions](https://github.com/QuaonY/dsh-marina-packs/discussions)
 - 查看[示例整合包](packs/)
 
 ---

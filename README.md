@@ -141,15 +141,15 @@ packs/你的整合包名称/
 
 ## 🔗 相关链接
 
-- [DSH Marina 主项目](https://github.com/你的用户名/dsh-marina)
+- [DSH Marina 主项目](https://github.com/QuaonY/dsh-marina)
 - [DSH 官方文档](https://docs.deepseek.com)
-- [问题反馈](https://github.com/你的用户名/dsh-marina-packs/issues)
+- [问题反馈](https://github.com/QuaonY/dsh-marina-packs/issues)
 
 ## 💬 社区
 
 有问题或建议？欢迎：
-- 提交 [Issue](https://github.com/你的用户名/dsh-marina-packs/issues)
-- 参与 [Discussions](https://github.com/你的用户名/dsh-marina-packs/discussions)
+- 提交 [Issue](https://github.com/QuaonY/dsh-marina-packs/issues)
+- 参与 [Discussions](https://github.com/QuaonY/dsh-marina-packs/discussions)
 
 ---
 

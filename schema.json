@@ -1,6 +1,6 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://github.com/你的用户名/dsh-marina-packs/schema.json",
+  "$id": "https://github.com/QuaonY/dsh-marina-packs/schema.json",
   "title": "DSH Marina Pack",
   "description": "Schema for DSH Marina integration pack configuration",
   "type": "object",
