@@ -1,6 +1,6 @@
 # 🎁 DSH Marina Packs
 
-社区策划的 DSH Marina 整合包 - 分享和发现插件配置组合
+社区策划的 DSH Marina 整合包目录 — 分享和发现插件配置组合。
 
 [English](#english) | [中文](#chinese)
 
@@ -17,69 +17,97 @@
 
 就像 Minecraft 的整合包、VS Code 的配置文件，让你快速获得完整的工作环境。
 
+## 🧭 这个仓库是怎么组织的？
+
+本仓库**只保存元数据**，不保存整合包的 `.zip` 文件：
+
+```text
+dsh-marina-packs/
+├── index.json                    # App 读取的整合包目录
+├── schema.json                   # pack.json 的 JSON Schema
+├── scripts/
+│   └── validate-catalog.mjs      # index.json / 目录一致性校验
+└── packs/
+    └── <slug>/
+        ├── pack.json             # 整合包元数据（必需）
+        └── README.md             # 使用说明（必需）
+```
+
+- 每个整合包的 `.zip` 托管在**作者自己的** GitHub Release：
+  `<username>/dsh-marina-shared-packs`
+- `index.json` 记录每个整合包的下载地址、文件大小和 SHA-256
+- 这样仓库体积不会随整合包数量膨胀，作者也能独立更新自己的包
+
 ## 🚀 如何使用
 
 ### 在 DSH Marina 中（推荐）
 
 1. 打开 **Marina 启动器**
 2. 进入 **「整合包」** 页面
-3. 浏览社区分享的整合包
-4. 点击 **「使用整合包」** 一键创建实例
+3. 浏览社区分享的整合包（列表来自本仓库的 `index.json`）
+4. 点击 **「使用整合包」** 一键下载并创建实例
 
 ### 手动安装
 
-```bash
-# 1. 下载整合包
-git clone https://github.com/你的用户名/dsh-marina-packs.git
-cd dsh-marina-packs/packs/[整合包名称]
-
-# 2. 在 Marina 中导入
-# 打开 Marina → 整合包 → 导入本地整合包 → 选择 pack.json
-```
+1. 在 `index.json` 中找到想要的整合包
+2. 打开条目里的 `url` 下载 `.zip`
+3. 在 Marina 中选择 **整合包 → 导入本地整合包**
 
 ## 🎨 精选整合包
 
 > 暂无整合包，成为第一个贡献者！
 
-<!--
-| 名称 | 描述 | 作者 | 下载 |
-|------|------|------|------|
-| [AI 开发助手](packs/ai-development) | 完整的代码开发环境 | @yourname | - |
-| [研究写作套装](packs/research-writing) | 论文写作和文献管理 | @someone | - |
--->
-
 ## 📤 分享你的整合包
 
-### 方法一：Marina 内一键分享（即将推出）
+### 方法一：Marina 内一键分享（推荐）
 
-1. 在 Marina 中打开你配置好的实例
-2. 点击 **「分享整合包」** 按钮
-3. 登录 GitHub（首次需要）
-4. 填写整合包信息并发布
-5. 自动创建 Pull Request
+1. 在 Marina 中打开配置好的实例
+2. 点击 **「分享到社区」**
+3. 首次使用点击 **「连接 GitHub」**，在浏览器中授权
+4. 填写整合包名称和描述，点击 **「完成」**
+
+Marina 会自动：
+
+- 生成整合包 `.zip`
+- 检查/创建 `<你的用户名>/dsh-marina-shared-packs` 仓库
+- 创建 GitHub Release 并上传 `.zip`
+- 生成 `packs/<slug>/pack.json` 和 `packs/<slug>/README.md`
+- 更新 `index.json`
+- 提交 Pull Request
 
 ### 方法二：手动提交
 
-1. **Fork** 本仓库
-2. 在 `packs/` 目录创建你的整合包文件夹
-3. 添加 `pack.json` 和 `README.md`
-4. 提交 **Pull Request**
-
-详细步骤见 [贡献指南](CONTRIBUTING.md)
+适合熟悉 Git 的用户。完整步骤见 [贡献指南](CONTRIBUTING.md)。
 
 ## 📋 整合包规范
 
-每个整合包需要包含：
+每个整合包在仓库中需要：
 
-```
-packs/你的整合包名称/
-├── pack.json          # 核心配置文件（必需）
+```text
+packs/<slug>/
+├── pack.json          # 核心元数据（必需）
 ├── README.md          # 使用说明（必需）
-├── preview.png        # 预览图（推荐）
+├── preview.png        # 预览图（可选）
 └── CHANGELOG.md       # 更新日志（可选）
 ```
 
-**pack.json 示例：**
+同时在 `index.json` 的 `packs` 数组中登记一条：
+
+```json
+{
+  "id": "ai-development",
+  "name": "AI 开发全家桶",
+  "author": "yourname",
+  "description": "完整的 AI 辅助开发环境",
+  "dsh_version": "2.5.0",
+  "plugins": ["code-runner", "terminal-tools"],
+  "url": "https://github.com/yourname/dsh-marina-shared-packs/releases/download/ai-development-v1.0.0/ai-development.zip",
+  "size": 123456,
+  "sha256": "64 位十六进制哈希"
+}
+```
+
+`pack.json` 的格式见 [schema.json](schema.json)。最小示例：
 
 ```json
 {
@@ -88,39 +116,47 @@ packs/你的整合包名称/
   "version": "1.0.0",
   "author": "yourname",
   "description": "完整的 AI 辅助开发环境",
-  "tags": ["ai", "development", "beginner"],
   "requirements": {
-    "min_runtime": "2.0.0",
-    "recommended_runtime": "2.5.0"
+    "min_runtime": "2.0.0"
   },
   "plugins": [
     {
       "name": "code-runner",
       "version": "^1.0.0",
-      "enabled": true,
-      "config": {
-        "theme": "dark"
-      }
+      "enabled": true
     }
   ],
   "metadata": {
-    "homepage": "https://github.com/user/pack",
+    "repository": "https://github.com/yourname/dsh-marina-shared-packs",
+    "download_url": "https://github.com/yourname/dsh-marina-shared-packs/releases/download/ai-development-v1.0.0/ai-development.zip",
+    "size": 123456,
+    "sha256": "64 位十六进制哈希",
     "license": "MIT"
   }
 }
 ```
 
-完整格式定义见 [schema.json](schema.json)
+## ✅ 自动校验
+
+每个 Pull Request 都会运行 `validate` 检查：
+
+- `packs/**/pack.json` 是否符合 `schema.json`
+- 是否包含 API Key、Token 等敏感数据
+- `pack.json` 和 `README.md` 是否齐全
+- `index.json` 是否合法，条目是否与 `packs/` 目录一致
+- `sha256`、`size`、`download_url` 是否匹配
 
 ## 🤝 社区准则
 
 ✅ **欢迎：**
+
 - 分享有价值的插件配置组合
 - 提供清晰的使用文档和截图
 - 尊重插件作者的许可证
 - 积极反馈和改进
 
 ❌ **禁止：**
+
 - 包含个人敏感数据（API Keys、Token、会话历史等）
 - 包含盗版、破解或恶意内容
 - 未经许可使用他人的整合包
@@ -129,15 +165,9 @@ packs/你的整合包名称/
 
 本项目使用 [MIT License](LICENSE)。
 
-**这意味着：**
 - ✅ 自由使用、修改、分发任何整合包
 - ✅ 商业使用完全 OK
 - ✅ 唯一要求：保留原作者署名
-
-**分享整合包时：**
-- 你分享的整合包将默认使用 MIT License
-- 你保留作者署名权
-- 其他人可以基于你的整合包创建衍生版本
 
 ## 🔗 相关链接
 
@@ -147,7 +177,6 @@ packs/你的整合包名称/
 
 ## 💬 社区
 
-有问题或建议？欢迎：
 - 提交 [Issue](https://github.com/QuaonY/dsh-marina-packs/issues)
 - 参与 [Discussions](https://github.com/QuaonY/dsh-marina-packs/discussions)
 
@@ -155,31 +184,33 @@ packs/你的整合包名称/
 
 ## <a name="english"></a>📖 What are Packs?
 
-Integration packs are pre-configured DSH instance templates that include:
+Integration packs are pre-configured DSH instance templates that include curated plugin
+combinations, recommended settings, runtime requirements, and documentation.
 
-- 🧩 **Curated Plugin Combinations** - Tested plugin setups
-- ⚙️ **Recommended Configurations** - Ready-to-use settings
-- 📦 **Runtime Versions** - Clear version dependencies
-- 📝 **Documentation** - Detailed guides and best practices
+## 🧭 Repository layout
 
-Like Minecraft modpacks or VS Code profiles, get a complete working environment instantly.
+This repository stores **metadata only**. Each pack's `.zip` lives in its author's own
+GitHub Release (`<username>/dsh-marina-shared-packs`), while `index.json` points to the
+download URL and records its size and SHA-256.
+
+```text
+index.json
+schema.json
+packs/<slug>/pack.json
+packs/<slug>/README.md
+scripts/validate-catalog.mjs
+```
 
 ## 🚀 How to Use
 
-### In DSH Marina (Recommended)
-
 1. Open **Marina Launcher**
-2. Go to **「Packs」** tab
-3. Browse community-shared packs
-4. Click **「Use Pack」** to create an instance
-
-### Manual Installation
-
-See [Chinese section](#chinese) for details.
+2. Go to **Packs**
+3. Browse community packs (read from `index.json`)
+4. Click **Use Pack** to download and create an instance
 
 ## 📤 Share Your Pack
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+Use **Share to Community** in Marina, or follow [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## 📜 License
 

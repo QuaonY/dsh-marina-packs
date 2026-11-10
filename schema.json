@@ -129,27 +129,42 @@
         "homepage": {
           "type": "string",
           "description": "Homepage URL",
-          "format": "uri"
+          "pattern": "^https?://.+"
         },
         "repository": {
           "type": "string",
           "description": "Repository URL",
-          "format": "uri"
+          "pattern": "^https?://.+"
         },
         "license": {
           "type": "string",
           "description": "SPDX license identifier",
           "default": "MIT"
         },
+        "download_url": {
+          "type": "string",
+          "description": "Direct download URL of the pack archive (.zip), hosted in the author's own GitHub Release",
+          "pattern": "^https?://.+"
+        },
+        "size": {
+          "type": "integer",
+          "description": "Size of the pack archive in bytes",
+          "minimum": 1
+        },
+        "sha256": {
+          "type": "string",
+          "description": "Lowercase or uppercase SHA-256 hex digest of the pack archive",
+          "pattern": "^[0-9a-fA-F]{64}$"
+        },
         "created_at": {
           "type": "string",
           "description": "Creation date (ISO 8601)",
-          "format": "date"
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}(T.*)?$"
         },
         "updated_at": {
           "type": "string",
           "description": "Last update date (ISO 8601)",
-          "format": "date"
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}(T.*)?$"
         }
       }
     },
@@ -175,7 +190,7 @@
         "video": {
           "type": "string",
           "description": "Video URL (YouTube, Bilibili, etc.)",
-          "format": "uri"
+          "pattern": "^https?://.+"
         }
       }
     },

@@ -6,8 +6,7 @@
   "description": "这是一个示例整合包，展示最基本的配置格式。可以作为创建新整合包的参考模板。",
   "tags": [
     "minimal",
-    "beginner",
-    "example"
+    "beginner"
   ],
   "requirements": {
     "min_runtime": "2.0.0",
