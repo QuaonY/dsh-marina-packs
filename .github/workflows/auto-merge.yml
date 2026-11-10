@@ -38,8 +38,14 @@ jobs:
 
           skip() { echo "跳过：$1"; exit 0; }
 
-          # 依次尝试：事件负载里的 PR 号（最可靠）→ 用 head sha 反查 → 运行关联的 PR。
+          # 依次尝试：事件负载里的 PR 号（最可靠）→ 打开中的 PR 里匹配 head sha
+          # （fork PR 也能命中）→ 用 head sha 反查 → 运行关联的 PR。
           pr="${PR_NUMBER:-}"
+          if [ -z "$pr" ]; then
+            found=$(gh api "repos/$REPO/pulls?state=open&per_page=100" \
+              --jq "[.[] | select(.head.sha == \"$HEAD_SHA\") | .number] | first" 2>/dev/null || true)
+            if [ "$found" != "null" ]; then pr="${found:-}"; fi
+          fi
           if [ -z "$pr" ]; then
             pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty' 2>/dev/null || true)
           fi
