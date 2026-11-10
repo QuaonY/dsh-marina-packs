@@ -124,6 +124,44 @@ if (existsSync(packsRoot)) {
       fail(`packs/${name}/ 没有登记到 index.json`);
     }
   }
+
+  // 敏感数据和本机路径扫描（只扫文本文件）
+  const textExtensions = [".json", ".md", ".txt", ".yml", ".yaml"];
+  const secretPattern =
+    /(api[_-]?key|access[_-]?token|client[_-]?secret|secret[_-]?key|password|bearer)\s*["']?\s*[:=]\s*["'][A-Za-z0-9_./+-]{20,}/i;
+  const absolutePathPattern = /(?:[A-Za-z]:\\|\/Users\/|\/home\/)/;
+
+  const scan = (directory, relative) => {
+    for (const entry of readdirSync(directory, { withFileTypes: true })) {
+      const full = join(directory, entry.name);
+      const shown = `${relative}/${entry.name}`;
+      if (entry.isDirectory()) {
+        scan(full, shown);
+        continue;
+      }
+      if (!textExtensions.some((extension) => entry.name.toLowerCase().endsWith(extension))) continue;
+
+      const content = readFileSync(full, "utf8").replace(/^\uFEFF/, "");
+      const secret = content.match(secretPattern);
+      if (secret) {
+        fail(`${shown}: 可能包含敏感数据（${secret[1]}）`);
+      }
+      if (absolutePathPattern.test(content)) {
+        fail(`${shown}: 包含本机绝对路径（请改用相对路径或 https 地址）`);
+      }
+    }
+  };
+
+  for (const name of readdirSync(packsRoot)) {
+    const directory = join(packsRoot, name);
+    if (!statSync(directory).isDirectory()) continue;
+    if (name.startsWith("example-") || name.startsWith("_") || name.startsWith(".")) continue;
+    scan(directory, `packs/${name}`);
+
+    if (!existsSync(join(directory, "preview.png")) && !existsSync(join(directory, "preview.jpg"))) {
+      console.warn(`⚠️  packs/${name}/ 没有 preview.png / preview.jpg（非阻断）`);
+    }
+  }
 }
 
 if (errors.length > 0) {
