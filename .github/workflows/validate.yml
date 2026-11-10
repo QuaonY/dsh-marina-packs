@@ -21,7 +21,8 @@ permissions:
   contents: read
 
 jobs:
-  # 分支保护的必需检查就是 job id "validate"，不要改名，否则所有 PR 会卡在 pending。
+  # 分支保护的必需检查是 job 的 name “Validate pack.json”；job id 只是内部标识。
+  # 改 name 必须同步修改仓库分支保护，否则所有 PR 会卡在 pending。
   validate:
     name: Validate pack.json
     runs-on: ubuntu-latest
