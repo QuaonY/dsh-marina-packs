@@ -31,15 +31,18 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_ID: ${{ github.event.workflow_run.id }}
           HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          PR_NUMBER: ${{ github.event.workflow_run.pull_requests[0].number }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
 
           skip() { echo "跳过：$1"; exit 0; }
 
-          # 用 head sha 反查 PR：比 actions/runs/<id>/pull_requests 可靠
-          # （后者对部分运行会直接 404）。注意命令失败不能让 set -e 提前退出。
-          pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty' 2>/dev/null || true)
+          # 依次尝试：事件负载里的 PR 号（最可靠）→ 用 head sha 反查 → 运行关联的 PR。
+          pr="${PR_NUMBER:-}"
+          if [ -z "$pr" ]; then
+            pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty' 2>/dev/null || true)
+          fi
           if [ -z "$pr" ]; then
             pr=$(gh api "repos/$REPO/actions/runs/$RUN_ID/pull_requests" --jq '.[0].number // empty' 2>/dev/null || true)
           fi
