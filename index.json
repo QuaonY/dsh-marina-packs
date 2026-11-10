@@ -1,4 +1,18 @@
 {
   "version": 1,
-  "packs": []
+  "packs": [
+    {
+      "id": "pack-20261110140014",
+      "name": "Auto Merge Test",
+      "author": "QuaonY",
+      "description": "Auto merge 流程的端到端测试整合包，含一个指向真实 Release 资产的下载地址。",
+      "dsh_version": "0.0.0",
+      "plugins": [
+        "dsh-marina"
+      ],
+      "url": "https://github.com/QuaonY/dsh-marina-shared-packs/releases/download/pack-pack-20261110140014-v1.0.0/pack-20261110140014.zip",
+      "size": 2913,
+      "sha256": "ba6e2654513a1b46e4e11de2f4d1221ddbce3600bff8ccdabda74a742a716bea"
+    }
+  ]
 }
