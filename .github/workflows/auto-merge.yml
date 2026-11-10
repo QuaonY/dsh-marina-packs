@@ -1,0 +1,88 @@
+name: Auto Merge Pack PR
+
+# 只对「整合包元数据」PR 生效：校验通过后自动 squash 合并。
+# 用 workflow_run 而不是 pull_request 触发器，才能在 fork PR 上拿到写权限，
+# 同时全程不 checkout 任何 PR 代码，避免执行不可信内容。
+on:
+  workflow_run:
+    workflows: ["Validate Pack"]
+    types: [completed]
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: auto-merge-pack-pr
+  cancel-in-progress: false
+
+jobs:
+  auto-merge:
+    name: Auto merge pack PR
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Merge eligible pack PR
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_ID: ${{ github.event.workflow_run.id }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+
+          skip() { echo "跳过：$1"; exit 0; }
+
+          pr=$(gh api "repos/$REPO/actions/runs/$RUN_ID/pull_requests" --jq '.[0].number // empty')
+          if [ -z "$pr" ]; then
+            # fork 的 PR 有时不会出现在 pull_requests 里，用 head sha 反查。
+            pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty')
+          fi
+          [ -n "$pr" ] || skip "这次运行没有关联 PR"
+          echo "PR #$pr"
+
+          base=$(gh pr view "$pr" --repo "$REPO" --json baseRefName --jq .baseRefName)
+          [ "$base" = "master" ] || skip "目标分支是 $base"
+
+          draft=$(gh pr view "$pr" --repo "$REPO" --json isDraft --jq .isDraft)
+          [ "$draft" != "true" ] || skip "草稿 PR"
+
+          labels=$(gh pr view "$pr" --repo "$REPO" --json labels --jq '.labels[].name' || true)
+          if printf '%s\n' "$labels" | grep -qxE 'hold|do-not-merge'; then
+            skip "带有 hold / do-not-merge 标签"
+          fi
+
+          # 只允许整合包相关的文件，防止夹带其他改动。
+          files=$(gh pr view "$pr" --repo "$REPO" --json files --jq '.files[].path')
+          [ -n "$files" ] || skip "PR 没有文件改动"
+
+          count=$(printf '%s\n' "$files" | wc -l | tr -d ' ')
+          [ "$count" -le 20 ] || skip "改动文件过多（$count）"
+
+          while IFS= read -r file; do
+            if ! printf '%s' "$file" | grep -qE '^(index\.json|packs/[A-Za-z0-9._-]+/(pack\.json|README\.md))$'; then
+              skip "PR 修改了非整合包文件：$file"
+            fi
+          done <<< "$files"
+
+          for attempt in 1 2 3; do
+            if gh pr merge "$pr" --repo "$REPO" --squash; then
+              echo "已自动合并 PR #$pr"
+              exit 0
+            fi
+            echo "第 $attempt 次合并失败，8 秒后重试"
+            sleep 8
+          done
+
+          # 直接合并仍不行时，交给 GitHub 的 auto-merge 在条件满足后处理。
+          if gh pr merge "$pr" --repo "$REPO" --squash --auto; then
+            echo "已为 PR #$pr 启用 auto-merge"
+            exit 0
+          fi
+
+          echo "自动合并失败，请手动处理 PR #$pr"
+          exit 1

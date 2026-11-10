@@ -44,7 +44,7 @@ npm install -g ajv-cli@5
 ajv validate -s schema.json -d "packs/*/pack.json" --strict=false
 ```
 
-## 审核 PR
+## PR 与自动合并
 
 Marina 的「分享到社区」会自动创建 PR，典型内容：
 
@@ -54,15 +54,29 @@ packs/<slug>/pack.json            # 新文件
 packs/<slug>/README.md            # 新文件
 ```
 
-审核要点：
+这类 PR **校验通过后会自动合并**（`.github/workflows/auto-merge.yml`），无需人工操作。
 
-1. `validate` 检查通过
+自动合并的安全边界：
+
+- 由 `workflow_run` 触发（`Validate Pack` 成功后才运行），因此能在 fork PR 上拿到写权限
+- 全程不 checkout PR 代码，只通过 API 读文件名，不执行任何来自 PR 的内容
+- 只合并改动文件全部匹配 `index.json` 或 `packs/<slug>/{pack.json,README.md}` 的 PR，且文件数 ≤ 20
+- 草稿 PR、目标分支不是 `master` 的 PR 不合并
+- 带 `hold` 或 `do-not-merge` 标签的 PR 不合并（需要人工复核时先加标签）
+
+日常仍然值得抽查已合并的 PR：
+
+1. `Validate pack.json` 检查通过
 2. `index.json` 条目的 `url` 能公开下载，`size` / `sha256` 与实际文件一致
 3. 描述清晰、无敏感数据、无本机绝对路径
 4. slug 合理（英文小写短横线）
 5. 插件真实存在
 
-合并后用 **Squash and merge**，分支会自动删除（仓库已开启 `delete_branch_on_merge`）。
+合并方式为 **Squash**，`master` 上的分支会自动删除（仓库已开启 `delete_branch_on_merge`；fork 里的分支由作者自己清理）。
+
+如果自动合并按钮因为分支保护卡住，工作流会退而启用 GitHub 的 auto-merge，条件满足后由 GitHub 自行合并。
+
+需要临时冻结自动合并时：给仓库加一个 `hold` 标签规则不方便，直接停用 `Auto Merge Pack PR` 工作流即可（Settings → Actions → 该工作流 → Disable）。
 
 ## 更新整合包
 
