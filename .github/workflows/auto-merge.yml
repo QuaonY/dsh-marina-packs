@@ -37,10 +37,11 @@ jobs:
 
           skip() { echo "跳过：$1"; exit 0; }
 
-          pr=$(gh api "repos/$REPO/actions/runs/$RUN_ID/pull_requests" --jq '.[0].number // empty')
+          # 用 head sha 反查 PR：比 actions/runs/<id>/pull_requests 可靠
+          # （后者对部分运行会直接 404）。注意命令失败不能让 set -e 提前退出。
+          pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty' 2>/dev/null || true)
           if [ -z "$pr" ]; then
-            # fork 的 PR 有时不会出现在 pull_requests 里，用 head sha 反查。
-            pr=$(gh api "repos/$REPO/commits/$HEAD_SHA/pulls" --jq '.[0].number // empty')
+            pr=$(gh api "repos/$REPO/actions/runs/$RUN_ID/pull_requests" --jq '.[0].number // empty' 2>/dev/null || true)
           fi
           [ -n "$pr" ] || skip "这次运行没有关联 PR"
           echo "PR #$pr"
@@ -57,7 +58,7 @@ jobs:
           fi
 
           # 只允许整合包相关的文件，防止夹带其他改动。
-          files=$(gh pr view "$pr" --repo "$REPO" --json files --jq '.files[].path')
+          files=$(gh pr view "$pr" --repo "$REPO" --json files --jq '.files[].path' 2>/dev/null || true)
           [ -n "$files" ] || skip "PR 没有文件改动"
 
           count=$(printf '%s\n' "$files" | wc -l | tr -d ' ')
