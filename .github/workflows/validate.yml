@@ -35,6 +35,13 @@ jobs:
         with:
           node-version: '20'
 
+      # PR 里的 scripts/ 和 schema.json 不可信：校验逻辑一律用目标分支的版本。
+      - name: Use trusted validator from the base branch
+        if: github.event_name == 'pull_request'
+        run: |
+          git fetch --no-tags --depth=1 origin "${{ github.base_ref }}"
+          git checkout FETCH_HEAD -- scripts schema.json
+
       - name: Validate catalog (index.json, packs/, sensitive data)
         run: node scripts/validate-catalog.mjs
 

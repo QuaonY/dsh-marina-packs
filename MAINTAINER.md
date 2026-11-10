@@ -16,10 +16,10 @@ packs/example-minimal/         # 模板示例，CI 跳过
 ## 分支保护与必需检查
 
 - 默认分支：`master`
-- 必需检查：**`validate`**（即 workflow 里的 job id，不是显示名）
-- 不要重命名 job id，否则所有 PR 会卡在 pending
+- 必需检查：**`Validate pack.json`**（即 workflow 中 job 的 `name`，分支保护按这个名字匹配）
+- 不要重命名 job 的 `name`，否则所有 PR 会卡在 pending
 
-如果以后调整了校验逻辑，务必保留 job id `validate`。
+如果以后调整了校验逻辑，务必保留 job 名 `Validate pack.json`，或同步更新分支保护设置。
 
 ## 校验工作流做了什么
 
