@@ -101,7 +101,7 @@ packs/<slug>/
   "description": "完整的 AI 辅助开发环境",
   "dsh_version": "2.5.0",
   "plugins": ["code-runner", "terminal-tools"],
-  "url": "https://github.com/yourname/dsh-marina-shared-packs/releases/download/ai-development-v1.0.0/ai-development.zip",
+  "url": "https://github.com/yourname/dsh-marina-shared-packs/releases/download/pack-ai-development-v1.0.0/ai-development.zip",
   "size": 123456,
   "sha256": "64 位十六进制哈希"
 }
@@ -128,7 +128,7 @@ packs/<slug>/
   ],
   "metadata": {
     "repository": "https://github.com/yourname/dsh-marina-shared-packs",
-    "download_url": "https://github.com/yourname/dsh-marina-shared-packs/releases/download/ai-development-v1.0.0/ai-development.zip",
+    "download_url": "https://github.com/yourname/dsh-marina-shared-packs/releases/download/pack-ai-development-v1.0.0/ai-development.zip",
     "size": 123456,
     "sha256": "64 位十六进制哈希",
     "license": "MIT"

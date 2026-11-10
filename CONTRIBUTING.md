@@ -36,7 +36,7 @@ Marina 会自动完成 9 个步骤：
 
 1. 生成整合包 `.zip`
 2. 检查/创建 `<你的用户名>/dsh-marina-shared-packs` 仓库
-3. 创建 GitHub Release（tag：`<slug>-v1.0.0`）
+3. 创建 GitHub Release（tag：`pack-<slug>-v1.0.0`）
 4. 上传 `.zip` 到 Release
 5. 生成元数据
 6. Fork `dsh-marina-packs`
@@ -68,12 +68,12 @@ git remote add upstream https://github.com/QuaonY/dsh-marina-packs.git
 ### 2. 托管 `.zip` 并取得下载地址
 
 1. 在 GitHub 创建（或复用）公开仓库 `<你的用户名>/dsh-marina-shared-packs`
-2. 创建 Release，例如 tag 为 `my-pack-v1.0.0`
+2. 创建 Release，例如 tag 为 `pack-my-pack-v1.0.0`
 3. 上传 `my-pack.zip` 作为 Release 资产
 4. 复制资产的下载地址，例如：
 
 ```text
-https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/my-pack-v1.0.0/my-pack.zip
+https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/pack-my-pack-v1.0.0/my-pack.zip
 ```
 
 ### 3. 计算文件大小和 SHA-256
@@ -123,7 +123,7 @@ mkdir -p packs/my-pack
   ],
   "metadata": {
     "repository": "https://github.com/你的用户名/dsh-marina-shared-packs",
-    "download_url": "https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/my-pack-v1.0.0/my-pack.zip",
+    "download_url": "https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/pack-my-pack-v1.0.0/my-pack.zip",
     "size": 123456,
     "sha256": "64 位十六进制哈希",
     "license": "MIT"
@@ -161,7 +161,7 @@ mkdir -p packs/my-pack
 
 ## 下载
 
-[my-pack.zip](https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/my-pack-v1.0.0/my-pack.zip)
+[my-pack.zip](https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/pack-my-pack-v1.0.0/my-pack.zip)
 ```
 
 ### 6. 在 index.json 中登记
@@ -176,7 +176,7 @@ mkdir -p packs/my-pack
   "description": "一句话说明这个整合包是做什么的",
   "dsh_version": "2.0.0",
   "plugins": ["插件包名"],
-  "url": "https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/my-pack-v1.0.0/my-pack.zip",
+  "url": "https://github.com/你的用户名/dsh-marina-shared-packs/releases/download/pack-my-pack-v1.0.0/my-pack.zip",
   "size": 123456,
   "sha256": "64 位十六进制哈希"
 }

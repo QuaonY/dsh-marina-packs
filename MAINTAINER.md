@@ -66,7 +66,7 @@ packs/<slug>/README.md            # 新文件
 
 ## 更新整合包
 
-作者重新分享会产生新的 Release tag（`<slug>-v1.0.0` / 带时间戳的分支），PR 里 `index.json` 的 `url` 会指向新文件。审核时确认旧地址不再被引用即可。
+作者重新分享会产生新的 Release tag（`pack-<slug>-v1.0.0` / 带时间戳的分支），PR 里 `index.json` 的 `url` 会指向新文件。审核时确认旧地址不再被引用即可。
 
 ## 撤回整合包
 
