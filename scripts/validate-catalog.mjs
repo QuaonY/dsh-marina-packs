@@ -106,6 +106,7 @@ for (const [index, entry] of document.packs.entries()) {
     fail(`${where}: pack.json 的 metadata.size 与 index.json 的 size 不一致`);
   }
   if (
+    typeof entry.sha256 === "string" &&
     metadata.sha256 !== undefined &&
     String(metadata.sha256).toLowerCase() !== entry.sha256.toLowerCase()
   ) {
