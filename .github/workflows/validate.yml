@@ -4,99 +4,56 @@ on:
   pull_request:
     paths:
       - 'packs/**'
+      - 'index.json'
+      - 'schema.json'
+      - 'scripts/**'
   push:
     branches:
       - master
     paths:
       - 'packs/**'
+      - 'index.json'
+      - 'schema.json'
+      - 'scripts/**'
+
+permissions:
+  contents: read
 
 jobs:
+  # 分支保护的必需检查就是 job id "validate"，不要改名，否则所有 PR 会卡在 pending。
   validate:
     name: Validate pack.json
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-      
-      - name: Install AJV (JSON Schema validator)
-        run: npm install -g ajv-cli
-      
-      - name: Find changed pack.json files
-        id: changed-files
-        uses: tj-actions/changed-files@v41
-        with:
-          files: 'packs/**/pack.json'
-      
-      - name: Validate pack.json against schema
-        if: steps.changed-files.outputs.any_changed == 'true'
+
+      - name: Validate catalog (index.json, packs/, sensitive data)
+        run: node scripts/validate-catalog.mjs
+
+      - name: Install AJV
+        run: npm install --global ajv-cli@5
+
+      - name: Validate every pack.json against schema.json
         run: |
-          echo "Validating changed pack.json files..."
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          set -euo pipefail
+          shopt -s nullglob
+
+          found=0
+          for file in packs/*/pack.json; do
+            name=$(basename "$(dirname "$file")")
+            case "$name" in
+              example-*|_*|.*) continue ;;
+            esac
+            found=$((found + 1))
             echo "Validating $file"
             ajv validate -s schema.json -d "$file" --strict=false
           done
-      
-      - name: Check for sensitive data
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "Checking for potential sensitive data..."
-          
-          # 检查常见的敏感数据模式
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            pack_dir=$(dirname "$file")
-            
-            # 检查 API key 模式
-            if grep -rE '(api[_-]?key|access[_-]?token|secret[_-]?key|password|bearer)\s*[":=]\s*["\047][a-zA-Z0-9_-]{20,}' "$pack_dir" 2>/dev/null; then
-              echo "❌ ERROR: Potential API key or token found in $pack_dir"
-              exit 1
-            fi
-            
-            # 检查绝对路径
-            if grep -rE '(C:|D:|E:|/home|/Users):\\|/' "$pack_dir" 2>/dev/null; then
-              echo "⚠️  WARNING: Absolute paths found in $pack_dir"
-              echo "Please use relative paths or environment variables"
-            fi
-            
-            echo "✓ $pack_dir passed sensitive data check"
-          done
-      
-      - name: Check required files
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "Checking for required files..."
-          
-          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            pack_dir=$(dirname "$file")
-            
-            # 检查必需文件
-            if [ ! -f "$pack_dir/pack.json" ]; then
-              echo "❌ ERROR: pack.json not found in $pack_dir"
-              exit 1
-            fi
-            
-            if [ ! -f "$pack_dir/README.md" ]; then
-              echo "❌ ERROR: README.md not found in $pack_dir"
-              exit 1
-            fi
-            
-            # 检查推荐文件
-            if [ ! -f "$pack_dir/preview.png" ] && [ ! -f "$pack_dir/preview.jpg" ]; then
-              echo "⚠️  WARNING: No preview image found in $pack_dir"
-              echo "Consider adding preview.png or preview.jpg"
-            fi
-            
-            echo "✓ $pack_dir has required files"
-          done
-      
-      - name: Validation summary
-        if: steps.changed-files.outputs.any_changed == 'true'
-        run: |
-          echo "✅ All validations passed!"
-          echo "Changed files:"
-          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+
+          echo "Validated $found pack.json file(s)"
