@@ -12,3 +12,4 @@ Auto merge 流程的端到端测试整合包，含一个指向真实 Release 资
 
 ---
 由 [DSH Marina](https://github.com/QuaonY/dsh-marina) 自动生成。
+<!-- trigger validate -->
