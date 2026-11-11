@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "name": "测试",
+  "version": "1.0.0",
+  "author": "QuaonY",
+  "description": "测试：测试（由 DSH Marina 分享）",
+  "requirements": {
+    "min_runtime": "0.0.0"
+  },
+  "plugins": [
+    {
+      "name": "@liustack/modlens",
+      "version": "3.27.2",
+      "enabled": true
+    },
+    {
+      "name": "dsh-whale-widget",
+      "version": "0.4.2",
+      "enabled": true
+    },
+    {
+      "name": "dshmarket",
+      "version": "1.73.14",
+      "enabled": true
+    }
+  ],
+  "metadata": {
+    "repository": "https://github.com/QuaonY/dsh-marina-shared-packs",
+    "homepage": "https://github.com/QuaonY/dsh-marina-shared-packs/releases/download/pack-pack-20261111072920-v1.0.0/pack-20261111072920.zip",
+    "download_url": "https://github.com/QuaonY/dsh-marina-shared-packs/releases/download/pack-pack-20261111072920-v1.0.0/pack-20261111072920.zip",
+    "size": 2912,
+    "sha256": "c8729bd095f2054e8c7511bb002e05e7a6b21ae13f2d653265cdb39903f8d82f",
+    "license": "MIT",
+    "created_at": "2026-11-11"
+  }
+}
