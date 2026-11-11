@@ -15,6 +15,21 @@
       "url": "https://github.com/QuaonY/dsh-marina-shared-packs/releases/download/pack-pack-20261111072920-v1.0.0/pack-20261111072920.zip",
       "size": 2912,
       "sha256": "c8729bd095f2054e8c7511bb002e05e7a6b21ae13f2d653265cdb39903f8d82f"
+    },
+    {
+      "id": "mmm",
+      "name": "mmm",
+      "author": "QuaonY",
+      "description": "mmm",
+      "dsh_version": "0.2.2-rc.1",
+      "plugins": [
+        "@liustack/modlens",
+        "dsh-whale-widget",
+        "dshmarket"
+      ],
+      "url": "https://github.com/QuaonY/dsh-marina-shared-packs/releases/download/pack-mmm-v1.0.0/mmm.zip",
+      "size": 2912,
+      "sha256": "62d9ed8e4e8ba3c7de125ace982e108bcad216cca53c572ccf94c1ab69229897"
     }
   ]
 }
